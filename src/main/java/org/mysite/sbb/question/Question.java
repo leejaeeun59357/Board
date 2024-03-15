@@ -1,21 +1,16 @@
-package org.mysite.sbb.Domain.model;
+package org.mysite.sbb.question;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.mysite.sbb.answer.Answer;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
-@Builder
+@Setter
+@Entity
 public class Question {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

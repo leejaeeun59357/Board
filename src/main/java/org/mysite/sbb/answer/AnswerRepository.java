@@ -1,6 +1,6 @@
-package org.mysite.sbb.Domain.repository;
+package org.mysite.sbb.answer;
 
-import org.mysite.sbb.Domain.model.Answer;
+import org.mysite.sbb.answer.Answer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
