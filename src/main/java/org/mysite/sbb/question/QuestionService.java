@@ -1,5 +1,6 @@
 package org.mysite.sbb.question;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,5 +27,18 @@ public class QuestionService {
         } else {
             throw new DataNotFoundException("question not found");
         }
+    }
+
+    /**
+     * 입력받은 값을 가진 question 저장
+     * @param subject 입력받은 subject
+     * @param content 입력받은 content
+     */
+    public void create(String subject, String content) {
+        Question question = new Question();
+        question.setSubject(subject);
+        question.setContent(content);
+        question.setCreateDate(LocalDateTime.now());
+        questionRepository.save(question);
     }
 }
