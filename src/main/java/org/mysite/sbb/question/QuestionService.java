@@ -63,4 +63,25 @@ public class QuestionService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return questionRepository.findAll(pageable);
     }
+
+    /**
+     * Question 수정
+     * @param question 수정될 question
+     * @param subject 수정된 subject
+     * @param content 수정된 content
+     */
+    public void modify(Question question, String subject, String content) {
+        question.setSubject(subject);
+        question.setContent(content);
+        question.setModifyDate(LocalDateTime.now());
+        questionRepository.save(question);
+    }
+
+    /**
+     * 질문 삭제
+     * @param question 삭제할 질문
+     */
+    public void delete(Question question) {
+        this.questionRepository.delete(question);
+    }
 }
