@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.mysite.sbb.exception.DataNotFoundException;
+import org.mysite.sbb.user.SiteUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,11 +41,12 @@ public class QuestionService {
      * @param subject 입력받은 subject
      * @param content 입력받은 content
      */
-    public void create(String subject, String content) {
+    public void create(String subject, String content, SiteUser author) {
         Question question = new Question();
         question.setSubject(subject);
         question.setContent(content);
         question.setCreateDate(LocalDateTime.now());
+        question.setAuthor(author);
         questionRepository.save(question);
     }
 

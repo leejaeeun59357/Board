@@ -2,13 +2,17 @@ package org.mysite.sbb.question;
 
 import jakarta.validation.Valid;
 import org.mysite.sbb.answer.AnswerForm;
+import org.mysite.sbb.user.SiteUser;
+import org.mysite.sbb.user.UserService;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 //RestController 는 Json 형식으로 데이터 response 하기때문에 html 파일 못 읽음
@@ -18,6 +22,7 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final UserService userService;
 
     /**
      *
@@ -48,6 +53,7 @@ public class QuestionController {
      *
      * @return question_form
      */
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String questionCreate(
             QuestionForm questionForm
@@ -55,18 +61,22 @@ public class QuestionController {
         return "question_form";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String questionCreate(
             @Valid QuestionForm questionForm,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            Principal principal
     ) {
         // 제목이나 내용이 비어 있을 때
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
 
+        SiteUser siteUser = userService.getUser(principal.getName());
+
         // 질문 저장
-        questionService.create(questionForm.getSubject(), questionForm.getContent());
+        questionService.create(questionForm.getSubject(), questionForm.getContent(),siteUser);
 
         // 질문 저장 후 질문 목록으로 다시 이동
         return "redirect:/question/list";
