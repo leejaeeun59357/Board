@@ -1,8 +1,8 @@
-package org.mysite.sbb.answer;
+package org.mysite.sbb.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AnswerRepository extends JpaRepository<Answer, Integer> {
+public interface UserRepository extends JpaRepository<SiteUser,Long> {
 }
