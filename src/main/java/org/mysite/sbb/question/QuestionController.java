@@ -2,6 +2,7 @@ package org.mysite.sbb.question;
 
 import jakarta.validation.Valid;
 import org.mysite.sbb.answer.AnswerForm;
+import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,20 +20,24 @@ public class QuestionController {
     private final QuestionService questionService;
 
     /**
-     * 질문 목록을 보여줌
-     * @param model html 파일에 전달할 객체
-     * @return question_list html 파일
+     *
+     * @param model html 파일에 전달할 모델
+     * @param page 게시물을 보기 원하는 해당 페이지
+     * @return 해당 페이지에 있는 게시물 10개
      */
     @GetMapping("/list")
-    public String list(Model model) {
-        List<Question> questionList = this.questionService.getList();
-        model.addAttribute("questionList", questionList);
+    public String list(Model model,
+                       @RequestParam(value = "page", defaultValue = "0") int page
+    ) {
+        Page<Question> paging = questionService.getList(page);
+        model.addAttribute("paging", paging);
+
         return "question_list";
     }
 
     @GetMapping(value = "/detail/{id}")
     public String detail(Model model, @PathVariable("id") Integer id
-    , AnswerForm answerForm) {
+            , AnswerForm answerForm) {
         Question question = this.questionService.getQuestion(id);
         model.addAttribute("question", question);
         return "question_detail";
@@ -40,6 +45,7 @@ public class QuestionController {
 
     /**
      * 질문 생성을 위한 form 리턴
+     *
      * @return question_form
      */
     @GetMapping("/create")
@@ -55,12 +61,12 @@ public class QuestionController {
             BindingResult bindingResult
     ) {
         // 제목이나 내용이 비어 있을 때
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "question_form";
         }
 
         // 질문 저장
-        questionService.create(questionForm.getSubject(),questionForm.getContent());
+        questionService.create(questionForm.getSubject(), questionForm.getContent());
 
         // 질문 저장 후 질문 목록으로 다시 이동
         return "redirect:/question/list";
