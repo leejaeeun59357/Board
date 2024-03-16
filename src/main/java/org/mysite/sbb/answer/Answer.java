@@ -3,6 +3,7 @@ package org.mysite.sbb.answer;
 import jakarta.persistence.*;
 import lombok.*;
 import org.mysite.sbb.question.Question;
+import org.mysite.sbb.user.SiteUser;
 
 import java.time.LocalDateTime;
 
@@ -21,4 +22,7 @@ public class Answer {
 
     @ManyToOne
     private Question question;
+
+    @ManyToOne
+    private SiteUser author;
 }
