@@ -84,4 +84,14 @@ public class QuestionService {
     public void delete(Question question) {
         this.questionRepository.delete(question);
     }
+
+    /**
+     * 추천 기능
+     * @param question 추천될 질문
+     * @param siteUser 추천자
+     */
+    public void vote(Question question, SiteUser siteUser) {
+        question.getVoter().add(siteUser);
+        questionRepository.save(question);
+    }
 }
