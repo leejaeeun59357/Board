@@ -14,10 +14,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @Service
@@ -45,11 +47,12 @@ public class QuestionService {
      * @param content 입력받은 content
      */
     public void create(String subject, String content, SiteUser author) {
-        Question question = new Question();
-        question.setSubject(subject);
-        question.setContent(content);
-        question.setCreateDate(LocalDateTime.now());
-        question.setAuthor(author);
+        Question question = Question.builder()
+                .subject(subject)
+                .content(content)
+                .createDate(LocalDateTime.now())
+                .author(author)
+                .build();
         questionRepository.save(question);
     }
 
@@ -68,16 +71,15 @@ public class QuestionService {
         return questionRepository.findAll(spec,pageable);
     }
 
-    /**
-     * Question 수정
-     * @param question 수정될 question
-     * @param subject 수정된 subject
-     * @param content 수정된 content
-     */
-    public void modify(Question question, String subject, String content) {
-        question.setSubject(subject);
-        question.setContent(content);
-        question.setModifyDate(LocalDateTime.now());
+    public void modify(Integer id, QuestionForm questionForm, String loginUserId) {
+        Question question = this.getQuestion(id);
+
+        if(!question.getAuthor().getUsername().equals(loginUserId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다");
+        }
+
+        question.modify(questionForm.getSubject(), questionForm.getContent(), LocalDateTime.now());
+
         questionRepository.save(question);
     }
 

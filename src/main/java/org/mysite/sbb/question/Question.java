@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
-@Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +37,10 @@ public class Question {
 
     @ManyToMany
     Set<SiteUser> voter;
+
+    public void modify(String subject, String content, LocalDateTime modifyDate) {
+        this.subject = subject;
+        this.content = content;
+        this.modifyDate = modifyDate;
+    }
 }

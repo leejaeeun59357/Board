@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.mysite.sbb.exception.DataNotFoundException;
 import org.mysite.sbb.question.Question;
 import org.mysite.sbb.user.SiteUser;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 
@@ -15,13 +17,13 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
 
     public Answer create(Question question, String content, SiteUser author) {
-        Answer answer = new Answer();
-        answer.setContent(content);
-        answer.setCreateDate(LocalDateTime.now());
-        answer.setQuestion(question);
-        answer.setAuthor(author);
-        this.answerRepository.save(answer);
-        return answer;
+        Answer answer = Answer.builder()
+                .content(content)
+                .createDate(LocalDateTime.now())
+                .question(question)
+                .author(author)
+                .build();
+        return answerRepository.save(answer);
     }
 
     public Answer getAnswer(Integer id) {
@@ -30,10 +32,15 @@ public class AnswerService {
         return answer;
     }
 
-    public void modify(Answer answer, String content) {
-        answer.setContent(content);
-        answer.setModifyDate(LocalDateTime.now());
-        answerRepository.save(answer);
+    public Answer modify(Integer id,String loginUserId, String content) {
+        Answer answer = this.getAnswer(id);
+
+        if (!answer.getAuthor().getUsername().equals(loginUserId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+
+        answer.modify(content, LocalDateTime.now());
+        return answerRepository.save(answer);
     }
 
     public void delete(Answer answer) {
