@@ -1,9 +1,10 @@
 ## 개요
+- 게시물을 작성하고 댓글을 작성할 수 있는 기본 웹페이지 만들기
 
-- Goal : 게시물을 작성하고 댓글을 작성할 수 있는 기본 웹페이지 만들기
-- Use : Spring boot, Spring security
+## ⚙️Use⚙️
+- Spring boot, Spring security, H2 Database
 
-## 필요 기능
+## ⚒️구현 기능⚒️
 - [x] 질문 등록
 - [x] 질문에 대한 답변 등록
 - [x] 회원 가입
